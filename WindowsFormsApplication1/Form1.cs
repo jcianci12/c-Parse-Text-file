@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections;
 
 
 namespace WindowsFormsApplication1
@@ -35,15 +36,21 @@ namespace WindowsFormsApplication1
 
         private void button2_Click(object sender, EventArgs e)
         {
+
+
             if (textBox1.TextLength > 0)
             {
 
                 textBox2.Text = File.ReadAllText(openFileDialog1.FileName);
+
+                string[] LinesOfTextFromFile = File.ReadAllLines(openFileDialog1.FileName);
+                string LinesOfTextFromTextbox = textBox2.Text;
                 int row = 0;
-                foreach (string line in textBox2.Lines)
+                int TextLine = 0;
+
+                foreach (string line in LinesOfTextFromFile)
                 {
-                    
-                    Console.WriteLine(row);
+
 
                     if (line.StartsWith("Your name:"))
                     {
@@ -58,7 +65,7 @@ namespace WindowsFormsApplication1
                         string line1 = line;
                         line1 = line1.Replace("Your email: ", "");
                         dataGridView1.Rows[row].Cells[1].Value = line1;
-                        
+
                     }
                     else { }
 
@@ -67,7 +74,7 @@ namespace WindowsFormsApplication1
                         string line1 = line;
                         line1 = line1.Replace("Your phone number: ", "");
                         dataGridView1.Rows[row].Cells[2].Value = line1;
-                        
+
                     }
                     else { }
 
@@ -76,7 +83,7 @@ namespace WindowsFormsApplication1
                         string line1 = line;
                         line1 = line1.Replace("Preferred method of contact: ", "");
                         dataGridView1.Rows[row].Cells[3].Value = line1;
-                       
+
                     }
                     else { }
 
@@ -85,18 +92,41 @@ namespace WindowsFormsApplication1
                         string line1 = line;
                         line1 = line1.Replace("Reason for contacting us: ", "");
                         dataGridView1.Rows[row].Cells[4].Value = line1;
-                       
-                    }
-                    else { }
-                    if (line.StartsWith("Message: "))
-                    {
-                        string line1 = line;
-                        line1 = line1.Replace("Message: ", "");
-                        dataGridView1.Rows[row].Cells[5].Value = line1;
-                        row++;
+
                     }
                     else { }
                     
+                    
+
+                    if (line.StartsWith("Message:"))
+                    {
+
+
+                        string line1 = line;
+                        int nextLine = (TextLine);
+                       
+                        string NextLineOfText = string.Empty;
+                        string NextLineOfText1 = string.Empty;
+                        string NextLineOfText2 = string.Empty;
+                        string NextLineOfText3 = string.Empty;
+                        line1 = line1.Replace("Message:", "");
+                        string[] allLines = File.ReadAllLines(openFileDialog1.FileName);
+                        NextLineOfText = allLines[nextLine + 1];
+                        NextLineOfText1 = allLines[nextLine + 2];
+                        NextLineOfText2 = allLines[nextLine + 3];
+                        NextLineOfText3 = allLines[nextLine + 4];
+                        string AssembledString = line1 + " " + NextLineOfText + " " + NextLineOfText1 + " " + NextLineOfText2 + " " + NextLineOfText3;
+                        
+
+                        dataGridView1.Rows[row].Cells[5].Value = AssembledString;
+
+                        row++;
+                    }
+                    else { }
+                    TextLine++;
+                    //debug
+                    Console.WriteLine("Row" + row);
+                    Console.WriteLine("TextLine" + TextLine);
 
                 }
                 dataGridView1.AutoResizeColumns();
